@@ -33,11 +33,17 @@ Before installing Echovox, ensure you have Python 3.6+ and pip installed on your
     .\venv\Scripts\activate
     ```
 
-3. **Install Dependencies**
+3. **Install Python Dependencies**
 
-  ```bash
-  pip install -r requirements.txt
-  ```
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install System Dependencies**
+
+     Make sure to install the following system dependencies:
+     - FLAC: Used for handling FLAC audio file formats. Install via Homebrew with `brew install flac`.
+     - FFmpeg: Required for audio and video processing. Install via Homebrew with `brew install ffmpeg`.
 
 Usage
 -----
