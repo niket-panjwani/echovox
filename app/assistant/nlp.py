@@ -7,14 +7,25 @@ class MeetingSchedulerClassifier:
 
     def predict(self, text: str) -> bool:
         """
-        Predicts whether the given text is about scheduling a meeting based on keyword matching.
+        Predicts whether the given text is about scheduling a meeting by combining
+        keyword matching and pre-trained model classification.
         
         :param text: The input text to classify.
         :return: True if the text is about scheduling a meeting, False otherwise.
         """
-        # Here we directly use keyword matching as a placeholder
-        # In practice, you might rely on the classifier.predict method for a more nuanced understanding
-        return self.contains_meeting_keywords(text.lower())
+        # First, check if the text contains specific keywords.
+        if self.contains_meeting_keywords(text.lower()):
+            return True
+        
+        # Use the pre-trained model for classification
+        result = self.classifier(text)
+        # Interpret the model's result
+        # For demonstration, we assume any positive sentiment is about scheduling (which is a simplification)
+        # You might want to adjust this logic based on your classification labels
+        if result[0]['label'] == 'LABEL_1' and result[0]['score'] > 0.5:
+            return True
+        
+        return False
     
     @staticmethod
     def contains_meeting_keywords(text: str) -> bool:

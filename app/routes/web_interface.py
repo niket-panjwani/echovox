@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify, Blueprint, send_file
-from app.assistant.speech_recognition import recognize_speech_from_file # Assume you have this function
+from flask import Flask, request, jsonify, Blueprint, send_file, redirect, url_for
+from app.assistant.speech_recognition import recognize_speech_from_file
 from app.assistant.text_to_speech import text_to_speech
 from app.assistant.nlp import MeetingSchedulerClassifier
 
@@ -16,12 +16,18 @@ def upload_audio():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
 
+    response_audio_path = process_audio_file(file)
+
+    # Return the audio file as response
+    return send_file(response_audio_path, mimetype="audio/mp3", as_attachment=True, download_name="response.mp3")
+
+def process_audio_file(file):
     # Recognize speech from the uploaded file
     recognized_text = recognize_speech_from_file(file)
 
     # Check if the recognized text is about scheduling a meeting
     classifier = MeetingSchedulerClassifier()
-    is_meeting_request = classifier.predict(recognized_text)    
+    is_meeting_request = classifier.predict(recognized_text)
 
     # Generate audio response from the recognized text
     if is_meeting_request:
@@ -30,6 +36,4 @@ def upload_audio():
         response_text = "I'm sorry, I didn't catch that. Could you please repeat?"
   
     response_audio_path = text_to_speech(response_text)
-
-    # Return the audio file as response
-    return send_file(response_audio_path, mimetype="audio/mp3", as_attachment=True, download_name="response.mp3")
+    return response_audio_path
